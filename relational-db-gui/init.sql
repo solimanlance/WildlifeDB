@@ -26,7 +26,6 @@ CREATE TABLE Sponsor (
     OrganizationID int,
     Contributions float,
     PRIMARY KEY (SponsorID, OrganizationID),
-    FOREIGN KEY (SponsorID) REFERENCES Sponsors,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 CREATE TABLE Funds (
@@ -34,7 +33,6 @@ CREATE TABLE Funds (
     ResearchTeamID int,
     Contributions float,
     PRIMARY KEY (SponsorID, ResearchTeamID),
-    FOREIGN KEY (SponsorID) REFERENCES Sponsors,
     FOREIGN KEY (ResearchTeamID) references ResearchTeams
 );
 CREATE TABLE Publications (
@@ -170,7 +168,7 @@ INSERT INTO Publications (ResearchTeamID, PublicationID, PublicationDate) VALUES
 (205, 305, '2024-10-11');
 
 --ResearchTeams_Contact(ContactInfo, Specializaion):
-INSERT INTO ResearchTeams_Contact(ContactInfo, Specializaion) VALUES 
+INSERT INTO ResearchTeams_Contact(ContactInfo, Specialization) VALUES 
 ('647-234-5675', 'Urban expansion and extinct animals'), 
 ('123-345-2432', 'Mammal Reproduction'), 
 ('789-290-2044', 'Effects of Oil Rigs on Marine Life') ,
@@ -219,7 +217,7 @@ INSERT INTO Caretaker (CaretakerID, Name, OrganizationID, Specialization) VALUES
 (304, 'Tyrone', 3, 'Hippos');
 
 --Plants (PlantID, HabiratID, Species):
-INSERT INTO Plants (PlantID, HabiratID, Species) VALUES 
+INSERT INTO Plants (PlantID, HabitatID, Species) VALUES 
 (400, 500, 'Lavendar'), 
 (401, 501, 'Maple Tree'), 
 (402, 502, 'Daisy'), 
