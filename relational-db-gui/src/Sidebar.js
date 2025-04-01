@@ -17,7 +17,8 @@ const tables = [
   "NaturalHabitat",
   "Zoo",
   "Aquarium",
-  "WildlifeReserves"
+  "WildlifeReserves",
+  "ConservationOrganization"
 ];
 
 const Sidebar = () => {
