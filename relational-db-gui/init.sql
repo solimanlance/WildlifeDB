@@ -15,10 +15,24 @@ DROP TABLE Zoo;
 DROP TABLE Aquarium;
 DROP TABLE WildlifeReserves;
 
-
+-- just added
+CREATE TABLE ConservationOrganization (
+    OrganizationID int PRIMARY KEY
+);
 CREATE TABLE Sponsors (
     SponsorID int PRIMARY KEY,
     Name VARCHAR(50)
+);
+
+CREATE TABLE ResearchTeams_Contact (
+    ContactInfo VARCHAR(30) PRIMARY KEY,
+    Specialization VARCHAR(30)
+);
+
+CREATE TABLE ResearchTeams (
+    ResearchTeamID int PRIMARY KEY,
+    ContactInfo VARCHAR(30),
+    FOREIGN KEY (ContactInfo) references ResearchTeams_Contact
 );
 
 CREATE TABLE Sponsor (
@@ -42,54 +56,6 @@ CREATE TABLE Publications (
     PRIMARY KEY(ResearchTeamID, PublicationID),
     FOREIGN KEY (ResearchTeamID) references ResearchTeams
 );
-CREATE TABLE LivesIn (
-    AnimalID int,
-    PopulationCount int,
-    OrganizationID int,
-    PRIMARY KEY (AnimalID, OrganizationID),
-    FOREIGN KEY (AnimalID) references Animal,
-    FOREIGN KEY (OrganizationID) references ConservationOrganization
-);
-CREATE TABLE Animal (
-    AnimalID int PRIMARY KEY,
-    HabitatID int NOT NULL,
-    Species VARCHAR(30),
-    ResearchTeamID int,
-    FOREIGN KEY (HabitatID) references NaturalHabitat,
-    FOREIGN KEY (ResearchTeamID) references ResearchTeams,
-    FOREIGN KEY (Species) REFERENCES SpeciesInfo
-);
-CREATE TABLE SpeciesInfo (
-    Species VARCHAR(30) PRIMARY KEY,
-    Lifespan FLOAT,
-    DietType VARCHAR(50)
-);
-
-CREATE TABLE ResearchTeams (
-    ResearchTeamID int PRIMARY KEY,
-    ContactInfo VARCHAR(30),
-    FOREIGN KEY (ContactInfo) references ResearchTeams_Contact
-);
-CREATE TABLE ResearchTeams_Contact (
-    ContactInfo VARCHAR(30) PRIMARY KEY,
-    Specialization VARCHAR(30)
-);
-CREATE TABLE Caretaker (
-    CaretakerID int PRIMARY KEY,
-    Name VARCHAR(50),
-    OrganizationID int NOT NULL,
-    Specialization VARCHAR(30),
-    AnimalID int NOT NULL,
-    FOREIGN KEY (AnimalID) references Animal,
-    FOREIGN KEY (OrganizationID) references ConservationOrganization
-);
-CREATE TABLE Plants (
-    PlantID int PRIMARY KEY,
-    HabitatID int NOT NULL,
-    Species VARCHAR(30),
-    FOREIGN KEY (HabitatID) references NaturalHabitat,
-    FOREIGN KEY (Species) REFERENCES PlantSpeciesInfo
-);
 
 CREATE TABLE PlantSpeciesInfo (
     Species VARCHAR(30) PRIMARY KEY,
@@ -101,6 +67,49 @@ CREATE TABLE NaturalHabitat (
     Description VARCHAR(500),
     AvgTemp FLOAT,
     AvgRainfall FLOAT
+);
+
+CREATE TABLE Plants (
+    PlantID int PRIMARY KEY,
+    HabitatID int NOT NULL,
+    Species VARCHAR(30),
+    FOREIGN KEY (HabitatID) references NaturalHabitat,
+    FOREIGN KEY (Species) REFERENCES PlantSpeciesInfo
+);
+
+CREATE TABLE SpeciesInfo (
+    Species VARCHAR(30) PRIMARY KEY,
+    Lifespan FLOAT,
+    DietType VARCHAR(50)
+);
+
+CREATE TABLE Animal (
+    AnimalID int PRIMARY KEY,
+    HabitatID int NOT NULL,
+    Species VARCHAR(30),
+    ResearchTeamID int,
+    FOREIGN KEY (HabitatID) references NaturalHabitat,
+    FOREIGN KEY (ResearchTeamID) references ResearchTeams,
+    FOREIGN KEY (Species) REFERENCES SpeciesInfo
+);
+
+CREATE TABLE LivesIn (
+    AnimalID int,
+    PopulationCount int,
+    OrganizationID int,
+    PRIMARY KEY (AnimalID, OrganizationID),
+    FOREIGN KEY (AnimalID) references Animal,
+    FOREIGN KEY (OrganizationID) references ConservationOrganization
+);
+
+CREATE TABLE Caretaker (
+    CaretakerID int PRIMARY KEY,
+    Name VARCHAR(50),
+    OrganizationID int NOT NULL,
+    Specialization VARCHAR(30),
+    AnimalID int NOT NULL,
+    FOREIGN KEY (AnimalID) references Animal,
+    FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
 CREATE TABLE Zoo (
@@ -125,11 +134,6 @@ CREATE TABLE WildlifeReserves(
     Name VARCHAR(50),
     Size FLOAT,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
-);
-
--- just added
-CREATE TABLE ConservationOrganization (
-    OrganizationID int PRIMARY KEY
 );
 
 -- ConservationOrganization(OrganizationID):
