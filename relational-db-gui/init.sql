@@ -40,7 +40,7 @@ CREATE TABLE Publications (
     PublicationID int,
     PublicationDate Date,
     PRIMARY KEY(ResearchTeamID, PublicationID),
-    FOREIGN KEY (PublicationID) references ResearchTeams
+    FOREIGN KEY (ResearchTeamID) references ResearchTeams
 );
 CREATE TABLE LivesIn (
     AnimalID int,
@@ -56,7 +56,7 @@ CREATE TABLE Animal (
     Species VARCHAR,
     ResearchTeamID int,
     FOREIGN KEY (HabitatID) references NaturalHabitat,
-    FOREIGN KEY (ResearchTeamID) references ResearchTeam,
+    FOREIGN KEY (ResearchTeamID) references ResearchTeams,
     FOREIGN KEY (Species) REFERENCES SpeciesInfo
 );
 CREATE TABLE SpeciesInfo (
@@ -78,7 +78,7 @@ CREATE TABLE Caretaker (
     CaretakerID int PRIMARY KEY,
     Name VARCHAR,
     OrganizationID int NOT NULL,
-    Speicalization VARCHAR,
+    Specialization VARCHAR,
     AnimalID int NOT NULL,
     FOREIGN KEY (AnimalID) references Animal,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
@@ -133,7 +133,8 @@ CREATE TABLE ConservationOrganization (
 );
 
 -- ConservationOrganization(OrganizationID):
-INSERT INTO ConservationOrganization(OrganizationID) VALUES (101),(102),(103),(104),(105),(106);
+INSERT INTO ConservationOrganization(OrganizationID) VALUES (101),(102),(103),(104),(105),(106),
+(107),(108),(109),(110),(111),(112),(113),(114),(115);
 
 -- Sponsors (SponsorID, Name):
 INSERT INTO Sponsors(SponsorID, Name) VALUES 
@@ -151,22 +152,6 @@ INSERT INTO Sponsor (SponsorID, OrganizationID, Contributions) VALUES
 (4, 103, 3000.00), 
 (5, 101, 15000.75);
 
---Funds (SponsorID, ResearchTeamID, Contributions):
-INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES 
-(1, 201, 1000.00), 
-(1, 202, 5000.25), 
-(2, 203, 2500.00), 
-(3, 201, 1500.00), 
-(4, 204, 4000.00);
-
---Publications (ResearchTeamID, PublicationID, PublicationDate):
-INSERT INTO Publications (ResearchTeamID, PublicationID, PublicationDate) VALUES
-(201, 301, '2015-06-24'), 
-(202, 302, '2020-05-02'), 
-(203, 303, '2022-04-06'), 
-(204, 304, '2023-06-10'), 
-(205, 305, '2024-10-11');
-
 --ResearchTeams_Contact(ContactInfo, Specializaion):
 INSERT INTO ResearchTeams_Contact(ContactInfo, Specialization) VALUES 
 ('647-234-5675', 'Urban expansion and extinct animals'), 
@@ -183,6 +168,24 @@ INSERT INTO ResearchTeams(ResearchTeamID, ContactInfo) VALUES
 (204, 'raymondsky8@gmail.com'),
 (205, 'rli@yahoo.com');
 
+--Funds (SponsorID, ResearchTeamID, Contributions):
+INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES 
+(1, 201, 1000.00), 
+(1, 202, 5000.25), 
+(2, 203, 2500.00), 
+(3, 201, 1500.00), 
+(4, 204, 4000.00);
+
+--Publications (ResearchTeamID, PublicationID, PublicationDate):
+INSERT INTO Publications (ResearchTeamID, PublicationID, PublicationDate) VALUES
+(201, 301, '2015-06-24'), 
+(202, 302, '2020-05-02'), 
+(203, 303, '2022-04-06'), 
+(204, 304, '2023-06-10'), 
+(205, 305, '2024-10-11');
+
+
+
 --SpeciesInfo (Species, Lifespan, DietType):
 INSERT INTO SpeciesInfo (Species, Lifespan, DietType) VALUES 
 ('Brown Bear', 34,'Omnivore'), 
@@ -191,38 +194,38 @@ INSERT INTO SpeciesInfo (Species, Lifespan, DietType) VALUES
 ('Tuna Fish', 5, 'Herbivore'), 
 ('Giraffe', 20, 'Herbivore');
 
+--NaturalHabitat(HabitatID, Description, AvgTemp, AvgRainfall):
+INSERT INTO NaturalHabitat(HabitatID, Description, AvgTemp, AvgRainfall) VALUES 
+(501, 'Swamp', 23, 2200), 
+(502, 'Saharah Desert', 40, 20), 
+(503, 'Arctic', -5, 20), 
+(504, 'Canadian Forest', 15, 220), 
+(505, 'Mountains', 5, 70);
+
 --Animal(AnimalID, Species, ResearchTeamID, HabitatID):
 INSERT INTO Animal(AnimalID, Species, ResearchTeamID, HabitatID)
 VALUES 
-(1000, 'Brown Bear', 201, 101), 
-(1001, 'Polar Bear', 202, 102), 
-(1002, 'Black Bear', 203, 103), 
-(1003, 'Tuna Fish', 204, 104), 
-(1004, 'Giraffe', 205, 105);
+(1000, 'Brown Bear', 201, 501), 
+(1001, 'Polar Bear', 202, 502), 
+(1002, 'Black Bear', 203, 503), 
+(1003, 'Tuna Fish', 204, 504), 
+(1004, 'Giraffe', 205, 505);
 
 --LivesIn(OrganizationID, AnimalID, PopulationCount):
 INSERT INTO LivesIn(OrganizationID, AnimalID, PopulationCount) VALUES 
-(1, 1000, 3), 
-(1, 1001, 2), 
-(2, 1002, 4), 
-(3, 1003, 10), 
-(3, 1004, 4);
+(101, 1000, 3), 
+(101, 1001, 2), 
+(102, 1002, 4), 
+(103, 1003, 10), 
+(103, 1004, 4);
 
 --Caretaker (CaretakerID, Name, OrganizationID, Specialization):
-INSERT INTO Caretaker (CaretakerID, Name, OrganizationID, Specialization) VALUES 
-(300, 'Bob', 1, 'Monkeys'), 
-(301, 'John', 1, 'Penguins'), 
-(302, 'Raymond', 2, 'Frogs'), 
-(303, 'Kat', 3, 'Snakes'), 
-(304, 'Tyrone', 3, 'Hippos');
-
---Plants (PlantID, HabiratID, Species):
-INSERT INTO Plants (PlantID, HabitatID, Species) VALUES 
-(400, 500, 'Lavendar'), 
-(401, 501, 'Maple Tree'), 
-(402, 502, 'Daisy'), 
-(403, 503, 'Mangrove Tree'), 
-(404, 504, 'Pine Tree');
+INSERT INTO Caretaker (CaretakerID, Name, OrganizationID, Specialization, AnimalID) VALUES 
+(300, 'Bob', 101, 'Monkeys', 1001), 
+(301, 'John', 101, 'Penguins', 1002), 
+(302, 'Raymond', 102, 'Frogs', 1003), 
+(303, 'Kat', 103, 'Snakes', 1004), 
+(304, 'Tyrone', 103, 'Hippos', 1000);
 
 --PlantSpeciesInfo(Species, Description):
 INSERT INTO PlantSpeciesInfo(Species, Description) VALUES 
@@ -232,34 +235,35 @@ INSERT INTO PlantSpeciesInfo(Species, Description) VALUES
 ('Mangrove Tree', 'Trees in Swamp'), 
 ('Pine Tree', 'Spiky Leaves');
 
---NaturalHabitat(HabitatID, Description, AvgTemp, AvgRainfall):
-INSERT INTO NaturalHabitat(HabitatID, Description, AvgTemp, AvgRainfall) VALUES 
-(101, 'Swamp', 23, 2200), 
-(102, 'Saharah Desert', 40, 20), 
-(103, 'Arctic', -5, 20), 
-(104, 'Canadian Forest', 15, 220), 
-(105, 'Mountains', 5, 70);
+--Plants (PlantID, HabiratID, Species):
+INSERT INTO Plants (PlantID, HabitatID, Species) VALUES 
+(600, 501, 'Lavender'), 
+(601, 502, 'Maple Tree'), 
+(602, 503, 'Daisy'), 
+(603, 504, 'Mangrove Tree'), 
+(604, 505, 'Pine Tree');
+
 
 --Zoo(OrganizationID, Location, Name, VisitorCapacity):
 INSERT INTO Zoo(OrganizationID, Location, Name, VisitorCapacity) VALUES 
-(1, 'Toronto', 'Toronto Zoo', 1000), 
-(2, 'Vancouver', 'Vancouver Zoo', 800), 
-(3, 'ChangChun', 'ChangChun Zoo', 2345), 
-(4, 'Munich', 'Munich Zoo', 600), 
-(5, 'Shanghai', 'Shanghai Zoo', 400);
+(101, 'Toronto', 'Toronto Zoo', 1000), 
+(102, 'Vancouver', 'Vancouver Zoo', 800), 
+(103, 'ChangChun', 'ChangChun Zoo', 2345), 
+(104, 'Munich', 'Munich Zoo', 600), 
+(105, 'Shanghai', 'Shanghai Zoo', 400);
 
 --Aquarium (OrganizationID, Location, Name, VisitorCapacity):
 INSERT INTO Aquarium (OrganizationID, Location, Name, VisitorCapacity) VALUES 
-(6, 'Toronto', 'Ripleys Aquarium', 1000), 
-(7, 'Vancouver', 'Vancouver Aquarium', 800), 
-(8, 'ChangChun', 'ChangChun Aquarium', 2345), 
-(9, 'Munich', 'Munich Aquarium', 600),
-(10, 'Shanghai', 'Shanghai Aquarium', 400);
+(106, 'Toronto', 'Ripleys Aquarium', 1000), 
+(107, 'Vancouver', 'Vancouver Aquarium', 800), 
+(108, 'ChangChun', 'ChangChun Aquarium', 2345), 
+(109, 'Munich', 'Munich Aquarium', 600),
+(110, 'Shanghai', 'Shanghai Aquarium', 400);
 
 --WildlifeReserves(OrganizationID, Location, Name, Size):
 INSERT INTO WildlifeReserves (OrganizationID, Location, Name, Size) VALUES 
-(11, 'Ontario', 'Algonquin Park', 1000.246), 
-(12, 'Vancouver', 'Musqueam Forest', 850.5),
-(13, 'ChangChun', 'ChangChun Wildlife Reserve', 4000.345), 
-(14, 'Munich', 'German National Park', 2499.80), 
-(15, 'Shanghai', 'Shanghai Panda Reserve', 439.245);
+(111, 'Ontario', 'Algonquin Park', 1000.246), 
+(112, 'Vancouver', 'Musqueam Forest', 850.5),
+(113, 'ChangChun', 'ChangChun Wildlife Reserve', 4000.345), 
+(114, 'Munich', 'German National Park', 2499.80), 
+(115, 'Shanghai', 'Shanghai Panda Reserve', 439.245);
