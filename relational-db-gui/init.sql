@@ -18,7 +18,7 @@ DROP TABLE WildlifeReserves;
 
 CREATE TABLE Sponsors (
     SponsorID int PRIMARY KEY,
-    Name VARCHAR
+    Name VARCHAR(50)
 );
 
 CREATE TABLE Sponsor (
@@ -53,32 +53,32 @@ CREATE TABLE LivesIn (
 CREATE TABLE Animal (
     AnimalID int PRIMARY KEY,
     HabitatID int NOT NULL,
-    Species VARCHAR,
+    Species VARCHAR(30),
     ResearchTeamID int,
     FOREIGN KEY (HabitatID) references NaturalHabitat,
     FOREIGN KEY (ResearchTeamID) references ResearchTeams,
     FOREIGN KEY (Species) REFERENCES SpeciesInfo
 );
 CREATE TABLE SpeciesInfo (
-    Species VARCHAR PRIMARY KEY,
+    Species VARCHAR(30) PRIMARY KEY,
     Lifespan FLOAT,
-    DietType VARCHAR
+    DietType VARCHAR(50)
 );
 
 CREATE TABLE ResearchTeams (
     ResearchTeamID int PRIMARY KEY,
-    ContactInfo VARCHAR,
+    ContactInfo VARCHAR(30),
     FOREIGN KEY (ContactInfo) references ResearchTeams_Contact
 );
 CREATE TABLE ResearchTeams_Contact (
-    ContactInfo VARCHAR PRIMARY KEY,
-    Specialization VARCHAR
+    ContactInfo VARCHAR(30) PRIMARY KEY,
+    Specialization VARCHAR(30)
 );
 CREATE TABLE Caretaker (
     CaretakerID int PRIMARY KEY,
-    Name VARCHAR,
+    Name VARCHAR(50),
     OrganizationID int NOT NULL,
-    Specialization VARCHAR,
+    Specialization VARCHAR(30),
     AnimalID int NOT NULL,
     FOREIGN KEY (AnimalID) references Animal,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
@@ -86,43 +86,43 @@ CREATE TABLE Caretaker (
 CREATE TABLE Plants (
     PlantID int PRIMARY KEY,
     HabitatID int NOT NULL,
-    Species VARCHAR,
+    Species VARCHAR(30),
     FOREIGN KEY (HabitatID) references NaturalHabitat,
     FOREIGN KEY (Species) REFERENCES PlantSpeciesInfo
 );
 
 CREATE TABLE PlantSpeciesInfo (
-    Species VARCHAR PRIMARY KEY,
-    Description TEXT
+    Species VARCHAR(30) PRIMARY KEY,
+    Description VARCHAR(500)
 );
 
 CREATE TABLE NaturalHabitat (
     HabitatID int PRIMARY KEY,
-    Description TEXT,
+    Description VARCHAR(500),
     AvgTemp FLOAT,
     AvgRainfall FLOAT
 );
 
 CREATE TABLE Zoo (
     OrganizationID int PRIMARY KEY,
-    Location VARCHAR,
-    Name VARCHAR,
+    Location VARCHAR(30),
+    Name VARCHAR(50),
     VisitorCapacity int,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
 CREATE TABLE Aquarium(
     OrganizationID int PRIMARY KEY,
-    Location VARCHAR,
-    Name VARCHAR,
+    Location VARCHAR(30),
+    Name VARCHAR(50),
     VisitorCapacity int,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
 CREATE TABLE WildlifeReserves(
     OrganizationID int PRIMARY KEY,
-    Location VARCHAR,
-    Name VARCHAR,
+    Location VARCHAR(30),
+    Name VARCHAR(50),
     Size FLOAT,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
