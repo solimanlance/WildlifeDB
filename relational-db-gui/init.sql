@@ -21,6 +21,7 @@ DROP TABLE ConservationOrganization;
 CREATE TABLE ConservationOrganization (
     OrganizationID int PRIMARY KEY
 );
+
 CREATE TABLE SponsorInfo (
     SponsorID int PRIMARY KEY,
     Name VARCHAR(50)
@@ -29,6 +30,24 @@ CREATE TABLE SponsorInfo (
 CREATE TABLE ResearchTeams_Contact (
     ContactInfo VARCHAR(30) PRIMARY KEY,
     Specialization VARCHAR(50)
+);
+
+CREATE TABLE NaturalHabitat (
+    HabitatID int PRIMARY KEY,
+    Description VARCHAR(500),
+    AvgTemp FLOAT,
+    AvgRainfall FLOAT
+);
+
+CREATE TABLE SpeciesInfo (
+    Species VARCHAR(30) PRIMARY KEY,
+    Lifespan FLOAT,
+    DietType VARCHAR(50)
+);
+
+CREATE TABLE PlantSpeciesInfo (
+    Species VARCHAR(30) PRIMARY KEY,
+    Description VARCHAR(500)
 );
 
 CREATE TABLE ResearchTeams (
@@ -42,33 +61,32 @@ CREATE TABLE Sponsor (
     OrganizationID int,
     Contributions float,
     PRIMARY KEY (SponsorID, OrganizationID),
+    FOREIGN KEY (SponsorID) references SponsorInfo,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
-CREATE TABLE Funds (
-    SponsorID int,
-    ResearchTeamID int,
-    Contributions float,
-    PRIMARY KEY (SponsorID, ResearchTeamID),
-    FOREIGN KEY (ResearchTeamID) references ResearchTeams
-);
-CREATE TABLE Publications (
-    ResearchTeamID int,
-    PublicationID int,
-    PublicationDate Date,
-    PRIMARY KEY(ResearchTeamID, PublicationID),
-    FOREIGN KEY (ResearchTeamID) references ResearchTeams
+
+CREATE TABLE Zoo (
+    OrganizationID int PRIMARY KEY,
+    Location VARCHAR(30),
+    Name VARCHAR(50),
+    VisitorCapacity int,
+    FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
-CREATE TABLE PlantSpeciesInfo (
-    Species VARCHAR(30) PRIMARY KEY,
-    Description VARCHAR(500)
+CREATE TABLE Aquarium (
+    OrganizationID int PRIMARY KEY,
+    Location VARCHAR(30),
+    Name VARCHAR(50),
+    VisitorCapacity int,
+    FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
-CREATE TABLE NaturalHabitat (
-    HabitatID int PRIMARY KEY,
-    Description VARCHAR(500),
-    AvgTemp FLOAT,
-    AvgRainfall FLOAT
+CREATE TABLE WildlifeReserves (
+    OrganizationID int PRIMARY KEY,
+    Location VARCHAR(30),
+    Name VARCHAR(50),
+    AreaSize FLOAT,
+    FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
 CREATE TABLE Plants (
@@ -79,12 +97,6 @@ CREATE TABLE Plants (
     FOREIGN KEY (Species) REFERENCES PlantSpeciesInfo
 );
 
-CREATE TABLE SpeciesInfo (
-    Species VARCHAR(30) PRIMARY KEY,
-    Lifespan FLOAT,
-    DietType VARCHAR(50)
-);
-
 CREATE TABLE Animal (
     AnimalID int PRIMARY KEY,
     HabitatID int NOT NULL,
@@ -93,6 +105,23 @@ CREATE TABLE Animal (
     FOREIGN KEY (HabitatID) references NaturalHabitat,
     FOREIGN KEY (ResearchTeamID) references ResearchTeams,
     FOREIGN KEY (Species) REFERENCES SpeciesInfo
+);
+
+CREATE TABLE Funds (
+    SponsorID int,
+    ResearchTeamID int,
+    Contributions float,
+    PRIMARY KEY (SponsorID, ResearchTeamID),
+    FOREIGN KEY (SponsorID) references SponsorInfo,
+    FOREIGN KEY (ResearchTeamID) references ResearchTeams
+);
+
+CREATE TABLE Publications (
+    ResearchTeamID int,
+    PublicationID int,
+    PublicationDate Date,
+    PRIMARY KEY(ResearchTeamID, PublicationID),
+    FOREIGN KEY (ResearchTeamID) references ResearchTeams
 );
 
 CREATE TABLE LivesIn (
@@ -111,30 +140,6 @@ CREATE TABLE Caretaker (
     Specialization VARCHAR(30),
     AnimalID int NOT NULL,
     FOREIGN KEY (AnimalID) references Animal,
-    FOREIGN KEY (OrganizationID) references ConservationOrganization
-);
-
-CREATE TABLE Zoo (
-    OrganizationID int PRIMARY KEY,
-    Location VARCHAR(30),
-    Name VARCHAR(50),
-    VisitorCapacity int,
-    FOREIGN KEY (OrganizationID) references ConservationOrganization
-);
-
-CREATE TABLE Aquarium(
-    OrganizationID int PRIMARY KEY,
-    Location VARCHAR(30),
-    Name VARCHAR(50),
-    VisitorCapacity int,
-    FOREIGN KEY (OrganizationID) references ConservationOrganization
-);
-
-CREATE TABLE WildlifeReserves(
-    OrganizationID int PRIMARY KEY,
-    Location VARCHAR(30),
-    Name VARCHAR(50),
-    AreaSize FLOAT,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
