@@ -129,7 +129,7 @@ async function countDemotable() {
         const tupleCount = responseData.count;
         messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
     } else {
-        alert("Error in count demotable!");
+        messageElement.textContent = "Error counting tuples!";
     }
 }
 
@@ -144,6 +144,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    
 };
 
 // General function to refresh the displayed table data. 
