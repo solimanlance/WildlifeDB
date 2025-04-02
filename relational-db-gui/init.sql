@@ -1,19 +1,20 @@
-DROP TABLE SponsorInfo; 
-DROP TABLE Sponsor; 
-DROP TABLE Funds; 
-DROP TABLE Publications; 
-DROP TABLE LivesIn; 
-DROP TABLE Animal; 
-DROP TABLE SpeciesInfo;
-DROP TABLE ResearchTeams; 
-DROP TABLE ResearchTeams_Contact;
-DROP TABLE Caretaker; 
-DROP TABLE Plants; 
-DROP TABLE PlantSpeciesInfo;
-DROP TABLE NaturalHabitat;
+DROP TABLE Caretaker;
+DROP TABLE LivesIn;
 DROP TABLE Zoo;
 DROP TABLE Aquarium;
 DROP TABLE WildlifeReserves;
+DROP TABLE Plants;
+DROP TABLE Animal;
+DROP TABLE Funds;
+DROP TABLE Publications;
+DROP TABLE Sponsor;
+DROP TABLE NaturalHabitat;
+DROP TABLE SpeciesInfo;
+DROP TABLE PlantSpeciesInfo;
+DROP TABLE ResearchTeams;
+DROP TABLE ResearchTeams_Contact;
+DROP TABLE SponsorInfo;
+DROP TABLE ConservationOrganization;
 
 
 -- just added
