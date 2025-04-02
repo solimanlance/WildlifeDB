@@ -28,16 +28,16 @@ router.post("/initiate-demotable", async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
-
 router.post("/insert-demotable", async (req, res) => {
-    const { id, name } = req.body;
-    const insertResult = await appService.insertDemotable(id, name);
+    const { animal_id, habitat_id, species_name, research_team_id } = req.body;
+    const insertResult = await appService.insertDemotable(animal_id, habitat_id, species_name, research_team_id);
     if (insertResult) {
         res.json({ success: true });
     } else {
         res.status(500).json({ success: false });
     }
 });
+
 
 router.post("/update-name-demotable", async (req, res) => {
     const { oldName, newName } = req.body;

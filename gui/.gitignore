@@ -11,6 +11,7 @@ node_modules/
 .vscode/
 .idea/
 
+./.env
 # Mac files
 .DS_Store
 
