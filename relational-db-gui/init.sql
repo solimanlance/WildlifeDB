@@ -26,7 +26,7 @@ CREATE TABLE Sponsors (
 
 CREATE TABLE ResearchTeams_Contact (
     ContactInfo VARCHAR(30) PRIMARY KEY,
-    Specialization VARCHAR(30)
+    Specialization VARCHAR(50)
 );
 
 CREATE TABLE ResearchTeams (
@@ -132,7 +132,7 @@ CREATE TABLE WildlifeReserves(
     OrganizationID int PRIMARY KEY,
     Location VARCHAR(30),
     Name VARCHAR(50),
-    Size FLOAT,
+    AreaSize FLOAT,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
@@ -162,7 +162,7 @@ INSERT INTO ResearchTeams_Contact(ContactInfo, Specialization) VALUES
 ('123-345-2432', 'Mammal Reproduction'), 
 ('789-290-2044', 'Effects of Oil Rigs on Marine Life') ,
 ('raymondsky8@gmail.com', 'Preservation of Rhinos'), 
-('rli@yahoo.com', 'Evolution ofAligators');
+('rli@yahoo.com', 'Evolution of Aligators');
 
 --ResearchTeams(ResearchTeamID, ContactInfo):
 INSERT INTO ResearchTeams(ResearchTeamID, ContactInfo) VALUES 
@@ -182,11 +182,11 @@ INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES
 
 --Publications (ResearchTeamID, PublicationID, PublicationDate):
 INSERT INTO Publications (ResearchTeamID, PublicationID, PublicationDate) VALUES
-(201, 301, '2015-06-24'), 
-(202, 302, '2020-05-02'), 
-(203, 303, '2022-04-06'), 
-(204, 304, '2023-06-10'), 
-(205, 305, '2024-10-11');
+(201, 301, TO_DATE('2015-06-24', 'YYYY-MM-DD')), 
+(202, 302, TO_DATE('2020-05-02', 'YYYY-MM-DD')), 
+(203, 303, TO_DATE('2022-04-06', 'YYYY-MM-DD')), 
+(204, 304, TO_DATE('2023-06-10', 'YYYY-MM-DD')), 
+(205, 305, TO_DATE('2024-10-11', 'YYYY-MM-DD'));
 
 
 
@@ -264,8 +264,8 @@ INSERT INTO Aquarium (OrganizationID, Location, Name, VisitorCapacity) VALUES
 (109, 'Munich', 'Munich Aquarium', 600),
 (110, 'Shanghai', 'Shanghai Aquarium', 400);
 
---WildlifeReserves(OrganizationID, Location, Name, Size):
-INSERT INTO WildlifeReserves (OrganizationID, Location, Name, Size) VALUES 
+--WildlifeReserves(OrganizationID, Location, Name, AreaSize):
+INSERT INTO WildlifeReserves (OrganizationID, Location, Name, AreaSize) VALUES 
 (111, 'Ontario', 'Algonquin Park', 1000.246), 
 (112, 'Vancouver', 'Musqueam Forest', 850.5),
 (113, 'ChangChun', 'ChangChun Wildlife Reserve', 4000.345), 
