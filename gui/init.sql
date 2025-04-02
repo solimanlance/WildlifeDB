@@ -91,7 +91,7 @@ CREATE TABLE Animal (
     Species VARCHAR(30),
     ResearchTeamID int,
     FOREIGN KEY (HabitatID) references NaturalHabitat,
-    FOREIGN KEY (ResearchTeamID) references ResearchTeams,
+    FOREIGN KEY (ResearchTeamID) references ResearchTeams
 );
 
 CREATE TABLE LivesIn (
