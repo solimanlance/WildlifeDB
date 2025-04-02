@@ -64,6 +64,7 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+
 router.get('/group-by-query', async (req, res) => { 
     try {
         const groupData = await appService.getGroupedPopulation();
