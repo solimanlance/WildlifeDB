@@ -171,16 +171,34 @@ initializeTable()
     }
     
 
-async function updateNameDemotable(oldName, newName) {
+async function updateNameAnimaltable(oldName, newName, oldID, newID) {
+    console.log("UPDATING:", { oldName, newName, oldID, newID });
+
+    const oldIDInt = parseInt(oldID);
+    const newIDInt = parseInt(newID);
+
+    if (isNaN(oldIDInt) || isNaN(newIDInt)) {
+        console.error("Error: oldID or newID is not a valid integer.");
+        return false;
+    }
+
+    console.log("Converted IDs:", { oldIDInt, newIDInt });
+
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
+            `UPDATE ANIMAL SET Species = :newName, ResearchTeamID = :newID WHERE Species = :oldName AND ResearchTeamID = :oldID`,
+            { 
+                newName: newName,
+                newID: newIDInt,
+                oldName: oldName, 
+                oldID: oldIDInt 
+            },
             { autoCommit: true }
         );
 
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
+        console.log("FALSE");
         return false;
     });
 }
@@ -199,6 +217,6 @@ module.exports = {
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
-    updateNameDemotable, 
+    updateNameAnimaltable, 
     countDemotable
 };
