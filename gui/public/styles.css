@@ -1,17 +1,40 @@
 /* GLOBAL STYLES */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    padding: 40px;
-    max-width: 800px;
-    margin: auto;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
     line-height: 1.6;
-    background-color: #fffef5f9;
-    color: #313131;
+    background-color: #f9fafb;
+    color: #333;
+}
+
+h1, h2 {
+    color: #1a365d;
+    margin-top: 2rem;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+p {
+    color: #4a5568;
+    margin-bottom: 1rem;
 }
 
 hr {
-    border-top: 2px solid rgb(44, 51, 62);
-    margin: auto;
+    border: none;
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 2rem 0;
 }
 
 /* TABLE STYLES */
@@ -19,68 +42,138 @@ table {
     width: 100%;
     border-collapse: collapse;
     background-color: #fff;
-    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1.5rem 0;
 }
 
 th, td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
+    padding: 12px 16px;
+    text-align: left;
 }
 
 th {
-    background-color: #f2f2f2;
-    font-weight: bold;
+    background-color: #2c5282;
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
 }
 
-tr:last-child td {
-    border-bottom: none;
+tr:nth-child(even) {
+    background-color: #f7fafc;
 }
 
 tr:hover {
-    background-color: #f5f5f5;
-    cursor: pointer;
+    background-color: #ebf4ff;
 }
 
-button {
-    background-color: rgb(32, 107, 227);
-    color: #fff;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* FORM STYLES */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 16px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
     outline: none;
 }
 
+input::placeholder, textarea::placeholder {
+    color: #a0aec0;
+}
+
+/* BUTTON STYLES */
+button {
+    background-color: #3182ce;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
 button:hover {
-    background-color: rgb(22, 87, 207);
+    background-color: #2b6cb0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 button:active {
-    background-color: rgb(12, 67, 187);
+    background-color: #2c5282;
+    transform: translateY(0);
 }
 
-/* INPUT STYLES */
-input, textarea {
-    width: 100%;
-    padding: 10px 15px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    color: #333;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
+/* MESSAGE DISPLAY STYLES */
+[id$="ResultMsg"], [id$="Result"], [id$="Msg"] {
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-radius: 6px;
+    font-size: 1rem;
+    min-height: 24px;
 }
 
-input::placeholder, textarea::placeholder {
-    color: #aaa;
+.success-message {
+    background-color: #c6f6d5;
+    color: #276749;
+    border-left: 4px solid #38a169;
 }
 
-/* OTHER STYLES */
+.error-message {
+    background-color: #fed7d7;
+    color: #9b2c2c;
+    border-left: 4px solid #e53e3e;
+}
+
+/* LOADING INDICATOR */
 .loading-gif {
-    height: 1em;
+    height: 1.4rem;
     vertical-align: middle;
+    margin-left: 8px;
+}
+
+/* RESPONSIVE ADJUSTMENTS */
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+    
+    input, button, select {
+        padding: 10px;
+    }
+    
+    th, td {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+/* CUSTOM SELECT STYLING */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
 }

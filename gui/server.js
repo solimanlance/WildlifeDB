@@ -7,7 +7,7 @@ const loadEnvFile = require('./utils/envUtil');
 const envVariables = loadEnvFile('./.env');
 
 const app = express();
-const PORT = 50043;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
+const PORT = 50123;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
 
 
 // Middleware setup
