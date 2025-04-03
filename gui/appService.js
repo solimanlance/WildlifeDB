@@ -174,16 +174,34 @@ initializeTable()
     }
     
 
-async function updateNameDemotable(oldName, newName) {
+async function updateNameAnimaltable(oldName, newName, oldID, newID) {
+    console.log("UPDATING:", { oldName, newName, oldID, newID });
+
+    const oldIDInt = parseInt(oldID);
+    const newIDInt = parseInt(newID);
+
+    if (isNaN(oldIDInt) || isNaN(newIDInt)) {
+        console.error("Error: oldID or newID is not a valid integer.");
+        return false;
+    }
+
+    console.log("Converted IDs:", { oldIDInt, newIDInt });
+
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
+            `UPDATE ANIMAL SET Species = :newName, ResearchTeamID = :newID WHERE Species = :oldName AND ResearchTeamID = :oldID`,
+            { 
+                newName: newName,
+                newID: newIDInt,
+                oldName: oldName, 
+                oldID: oldIDInt 
+            },
             { autoCommit: true }
         );
         
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
+        console.log("FALSE");
         return false;
     });
 }
@@ -206,6 +224,32 @@ async function deleteAnimal(animal_id) {
 
 
 
+async function projectionPlants(selectedField) {
+
+
+    console.log("field to project", { selectedField });
+
+    const allowedFields = ["PlantID", "HabitatID", "Species"]; 
+
+    if (!allowedFields.includes(selectedField)) {
+        console.error("Invalid field selected");
+        return false;
+    }
+
+    const query = `SELECT ${selectedField} FROM Plants`; 
+
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(query, {}, { autoCommit: true });
+
+            return result.rows; 
+        } catch (error) {
+            console.error("Database error:", error);
+            return false;
+        }
+    });
+}
+
 async function countDemotable() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT COUNT(*) FROM ANIMAL');
@@ -215,12 +259,97 @@ async function countDemotable() {
     });
 }
 
+async function getGroupedPopulation() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT OrganizationID,MIN(PopulationCount) AS mixn_population 
+            FROM LivesIn 
+            GROUP BY OrganizationID
+        `);
+
+        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
+        // console.log("DB Query Result:", result.rows);  // Add this to log the data
+
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function havingOver2000() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT SponsorID
+            FROM Funds 
+            GROUP BY SponsorID
+            HAVING SUM(Contributions) > 2000 
+        `);
+
+        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
+        console.log("DB Query Result:", result.rows);  // Add this to log the data
+
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function highestAverageContribution() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT SponsorID 
+            FROM Funds F
+            GROUP BY SponsorID 
+            HAVING AVG(Contributions) >= ALL (
+                SELECT AVG(F1.Contributions)  
+                FROM Funds F1 
+                GROUP BY F1.SponsorID)`
+        );
+
+        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
+        console.log("DB Query Result:", result.rows);  // Add this to log the data
+
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
+async function sponsoredByAll() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT R.ResearchTeamID 
+            FROM ResearchTeams R
+            WHERE NOT EXISTS 
+                (SELECT F.SponsorID
+                FROM Funds F 
+                WHERE NOT EXISTS  
+                    (SELECT F2.SponsorID
+                    FROM Funds F2
+                    WHERE F2.ResearchTeamID = R.ResearchTeamID
+                    AND F2.SponsorID = F.SponsorID))`
+        );
+
+        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
+        console.log("DB Query Result:", result.rows);  // Add this to log the data
+
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
-    updateNameDemotable, 
+    projectionPlants, 
+    updateNameAnimaltable, 
     countDemotable,
-    deleteAnimal
+    deleteAnimal,
+    havingOver2000, 
+    highestAverageContribution,
+    sponsoredByAll
 };
