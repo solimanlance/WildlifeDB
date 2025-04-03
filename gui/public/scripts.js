@@ -167,7 +167,43 @@ async function countDemotable() {
         const tupleCount = responseData.count;
         messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
     } else {
-        alert("Error in count demotable!");
+        messageElement.textContent = "Error counting tuples!";
+    }
+}
+
+async function groupByQueryFunctionality() {
+    try {
+        const response = await fetch('/group-by-query');
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);  // Log the full response
+
+        const resultDiv = document.getElementById('groupByResult');
+
+        if (data.success) {
+            // Create a table element
+            let tableHTML = '<table border="1"><thead><tr><th>Organization ID</th><th>Minimum Population</th></tr></thead><tbody>';
+
+            // Loop through the data and create rows for each entry
+            data.groupData.forEach(row => {
+                const [organizationID, minPopulation] = row;
+                tableHTML += `<tr><td>${organizationID}</td><td>${minPopulation}</td></tr>`;
+            });
+
+            // Close the table tag
+            tableHTML += '</tbody></table>';
+
+            resultDiv.innerHTML = tableHTML;
+        } else {
+            resultDiv.textContent = 'Error: No data found or the query failed.';
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+        document.getElementById('groupByResult').textContent = 'Error fetching the data from the server.';
     }
 }
 
@@ -182,6 +218,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updateNameAnimaltable").addEventListener("submit", updateNameAnimaltable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
 };
 
 // General function to refresh the displayed table data. 
