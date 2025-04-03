@@ -65,30 +65,43 @@ async function resetDemotable() {
         alert("Error initiating table!");
     }
 }
-// Inserts new records into the demotable.
+
+// Updates names in the demotable.
 async function insertDemotable(event) {
     event.preventDefault();
-    const idValue = document.getElementById('insertId').value;
-    const nameValue = document.getElementById('insertName').value;
+
+    const animalId = parseInt(document.getElementById('insertId').value);
+    const habitatId = parseInt(document.getElementById('insertHabitat').value);
+    const researchTeamId = parseInt(document.getElementById('insertTeam').value);
+
+    const speciesName = document.getElementById('insertSpecies').value;
+
+
     const response = await fetch('/insert-demotable', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            id: idValue,
-            name: nameValue
+            animal_id: animalId,
+            habitat_id: habitatId,
+            species_name: speciesName,
+            research_team_id: researchTeamId
         })
     });
+
     const responseData = await response.json();
     const messageElement = document.getElementById('insertResultMsg');
+
     if (responseData.success) {
-        messageElement.textContent = "Data inserted successfully!";
+        messageElement.textContent = "Animal inserted successfully!";
         fetchTableData();
     } else {
-        messageElement.textContent = "Error inserting data!";
+        messageElement.textContent = "Error inserting animal!";
     }
 }
+
+
 // Updates names in the demotable.
 async function updateNameDemotable(event) {
     event.preventDefault();
@@ -138,7 +151,7 @@ async function groupByQueryFunctionality() {
         }
 
         const data = await response.json();
-        console.log("Data Received from Server:", data);  // Log the full response
+        // console.log("Data Received from Server:", data);  // Log the full response
 
         const resultDiv = document.getElementById('groupByResult');
 
@@ -165,6 +178,97 @@ async function groupByQueryFunctionality() {
     }
 }
 
+async function havingFunctionality() {
+    try {
+        const response = await fetch('/having-query');
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);
+
+        const resultDiv = document.getElementById('havingResult');
+
+        if (data.success && data.groupData.length > 0) {
+            let tableHTML = '<table border="1"><thead><tr><th>Sponsor ID</th></thead><tbody>';
+            data.groupData.forEach(row => {
+                const [SponsorID] = row;
+                tableHTML += `<tr><td>${SponsorID}</td></tr>`;
+            });
+            tableHTML += '</tbody></table>';
+            resultDiv.innerHTML = tableHTML;
+        } else {
+            resultDiv.textContent = `Error: ${data.message || "No data found."}`;
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+        document.getElementById('havingResult').textContent = `Error fetching the data from the server: ${error.message}`;
+    }
+}
+
+async function nestedFunctionality() {
+    try {
+        const response = await fetch('/nested-query');
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);
+
+        const resultDiv = document.getElementById('nestedResult');
+
+        if (data.success && data.groupData.length > 0) {
+            let tableHTML = '<table border="1"><thead><tr><th>Sponsor ID</th></thead><tbody>';
+            data.groupData.forEach(row => {
+                const [SponsorID] = row;
+                tableHTML += `<tr><td>${SponsorID}</td></tr>`;
+            });
+            tableHTML += '</tbody></table>';
+            resultDiv.innerHTML = tableHTML;
+        } else {
+            resultDiv.textContent = `Error: ${data.message || "No data found."}`;
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+        document.getElementById('nestedResult').textContent = `Error fetching the data from the server: ${error.message}`;
+    }
+}
+
+async function divisionFunctionality() {
+    try {
+        const response = await fetch('/division-query');
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);
+
+        const resultDiv = document.getElementById('divisionResult');
+
+        if (data.success && data.groupData.length > 0) {
+            let tableHTML = '<table border="1"><thead><tr><th>Research Team ID</th></thead><tbody>';
+            data.groupData.forEach(row => {
+                const [ResearchTeamID] = row;
+                tableHTML += `<tr><td>${ResearchTeamID}</td></tr>`;
+            });
+            tableHTML += '</tbody></table>';
+            resultDiv.innerHTML = tableHTML;
+        } else {
+            resultDiv.textContent = `Error: ${data.message || "No data found."}`;
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+        document.getElementById('divisionResult').textContent = `Error fetching the data from the server: ${error.message}`;
+    }
+}
+
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -176,6 +280,10 @@ window.onload = function() {
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
     document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
+    document.getElementById("havingButton").addEventListener("click", havingFunctionality); 
+    document.getElementById("nestedButton").addEventListener("click", nestedFunctionality); 
+    document.getElementById("divisionButton").addEventListener("click", divisionFunctionality); 
+
 };
 
 // General function to refresh the displayed table data. 
