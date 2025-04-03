@@ -85,6 +85,24 @@ async function fetchDemotableFromDb() {
     });
 }
 
+async function joinCaretakerByResearchTeam(researchTeamID) {
+    return await withOracleDB(async (connection) => {
+        const query = `
+            SELECT c.CaretakerID, c.Specialization 
+            FROM Caretaker c, Animal a
+            WHERE c.AnimalID = a.AnimalID AND a.ResearchTeamID = :researchTeamID
+        `;
+        const result = await connection.execute(query, { researchTeamID }, { outFormat: oracledb.OUT_FORMAT_OBJECT });
+        console.log("Join Query Result:", result.rows);
+        return result.rows;
+    }).catch((err) => {
+        console.error("Error in joinCaretakerByResearchTeam:", err);
+        return false;
+    });
+}
+
+
+
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
@@ -387,5 +405,6 @@ module.exports = {
     havingOver2000, 
     highestAverageContribution,
     sponsoredByAll,
-    getGroupedPopulation
+    getGroupedPopulation,
+    joinCaretakerByResearchTeam
 };

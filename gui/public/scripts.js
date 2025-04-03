@@ -81,6 +81,49 @@ async function deleteAnimal(event) {
     }
 }
 
+async function joinQueryFunctionality(event) {
+    event.preventDefault();
+
+    const researchTeamID = parseInt(document.getElementById('inputResearchTeamID').value);
+
+    try {
+        const res = await fetch('/join-query', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({researchTeamID})
+        });
+        
+        const data = await res.json();
+
+        const resultDiv = document.getElementById('joinResultMsg');
+
+        if (data.success && data.data.length > 0) {
+            let tableHTML = `<table border="1">
+                <thead>
+                    <tr>
+                        <th>Caretaker ID</th>
+                        <th>Specialization</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            data.data.forEach(row => {
+                tableHTML += `<tr>
+                    <td>${row.CARETAKERID || row[0]}</td>
+                    <td>${row.SPECIALIZATION || row[1]}</td>
+                </tr>`;
+            });
+            tableHTML += `</tbody></table>`;
+            resultDiv.innerHTML = tableHTML;
+        } else {
+            resultDiv.textContent = 'No data found for the given Research Team ID.';
+        }
+    } catch (error) {
+        console.error("Error executing join query:", error);
+        document.getElementById('joinResultMsg').textContent = `Error: ${error.message}`;
+    }
+}
 
 // Updates names in the demotable.
 async function updateNameAnimaltable(event) {
@@ -477,6 +520,7 @@ window.onload = function() {
     document.getElementById("havingButton").addEventListener("click", havingFunctionality); 
     document.getElementById("nestedButton").addEventListener("click", nestedFunctionality); 
     document.getElementById("divisionButton").addEventListener("click", divisionFunctionality); 
+    document.getElementById("joinQueryForm").addEventListener("submit", joinQueryFunctionality);
 };
 
 // General function to refresh the displayed table data. 

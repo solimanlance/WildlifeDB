@@ -61,6 +61,26 @@ router.post("/delete-animal", async (req, res) => {
     }
 });
 
+router.post('/join-query', async (req, res) => {
+    const { researchTeamID } = req.body;
+    console.log("Received join-query request for ResearchTeamID:", researchTeamID);
+
+    try {
+        const result = await appService.joinCaretakerByResearchTeam(researchTeamID);
+        if (result && result.length > 0) {
+            res.json({ success: true, data: result });
+        } else {
+            res.json({ success: false, message: 'No data found for the given Research Team ID.' });
+        }
+    } catch (err) {
+        console.error("Error in join-query route:", err);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+
+
+
 router.post("/update-name-animaltable", async (req, res) => {
     const { oldName, newName, oldID, newID } = req.body;
     const updateResult = await appService.updateNameAnimaltable(oldName, newName, oldID, newID);
