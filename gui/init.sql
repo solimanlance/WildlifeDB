@@ -99,7 +99,7 @@ CREATE TABLE LivesIn (
     PopulationCount int,
     OrganizationID int,
     PRIMARY KEY (AnimalID, OrganizationID),
-    FOREIGN KEY (AnimalID) references Animal,
+    FOREIGN KEY (AnimalID) references Animal ON DELETE CASCADE,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 
@@ -109,7 +109,7 @@ CREATE TABLE Caretaker (
     OrganizationID int NOT NULL,
     Specialization VARCHAR(30),
     AnimalID int NOT NULL,
-    FOREIGN KEY (AnimalID) references Animal,
+    FOREIGN KEY (AnimalID) references Animal ON DELETE CASCADE,
     FOREIGN KEY (OrganizationID) references ConservationOrganization
 );
 

@@ -88,16 +88,20 @@ async function fetchDemotableFromDb() {
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
+            await connection.execute(`DROP TABLE ANIMAL`);
         } catch(err) {
             console.log('Table might not exist, proceeding to create...');
         }
 
         const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE (
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
-            )
+            CREATE TABLE Animal (
+                AnimalID int PRIMARY KEY,
+                HabitatID int NOT NULL,
+                Species VARCHAR(30),
+                ResearchTeamID int,
+                FOREIGN KEY (HabitatID) references NaturalHabitat,
+                FOREIGN KEY (ResearchTeamID) references ResearchTeams
+            );
         `);
         return true;
     }).catch(() => {
@@ -155,7 +159,6 @@ initializeTable()
 
     async function insertDemotable(animal_id, habitat_id, species_name, research_team_id) {
         console.log("INSERTING:", { animal_id, habitat_id, species_name, research_team_id });
-        
         return await withOracleDB(async (connection) => {
             const result = await connection.execute(
                 `INSERT INTO ANIMAL (AnimalID, HabitatID, Species, ResearchTeamID)
@@ -178,12 +181,30 @@ async function updateNameDemotable(oldName, newName) {
             [newName, oldName],
             { autoCommit: true }
         );
-
+        
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
         return false;
     });
 }
+
+async function deleteAnimal(animal_id) {
+    console.log(animal_id);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `DELETE FROM ANIMAL WHERE AnimalID = :animal_id`,
+            [animal_id],
+            { autoCommit: true }
+        );
+      
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error("Delete Error:", err);
+        return false;
+    });
+}
+
+
 
 async function countDemotable() {
     return await withOracleDB(async (connection) => {
@@ -194,32 +215,12 @@ async function countDemotable() {
     });
 }
 
-async function getGroupedPopulation() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(`
-            SELECT OrganizationID,MIN(PopulationCount) AS mixn_population 
-            FROM LivesIn 
-            GROUP BY OrganizationID
-        `);
-
-        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
-        console.log("DB Query Result:", result.rows);  // Add this to log the data
-
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-
-
-
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
     updateNameDemotable, 
-    countDemotable, 
-    getGroupedPopulation
+    countDemotable,
+    deleteAnimal
 };
