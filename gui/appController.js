@@ -39,9 +39,9 @@ router.post("/insert-demotable", async (req, res) => {
     }
 });
 
-router.post("/update-name-demotable", async (req, res) => {
-    const { oldName, newName } = req.body;
-    const updateResult = await appService.updateNameDemotable(oldName, newName);
+router.post("/update-name-animaltable", async (req, res) => {
+    const { oldName, newName, oldID, newID } = req.body;
+    const updateResult = await appService.updateNameAnimaltable(oldName, newName, oldID, newID);
     if (updateResult) {
         res.json({ success: true });
     } else {

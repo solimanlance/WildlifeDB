@@ -51,6 +51,43 @@ async function fetchAndDisplayUsers() {
         });
     });
 }
+// Updates names in the demotable.
+async function updateNameAnimaltable(event) {
+    event.preventDefault();
+
+    const oldNameValue = document.getElementById('updateOldSpeciesName').value;
+    const newNameValue = document.getElementById('updateNewSpeciesName').value;
+    const oldIDValue = parseInt(document.getElementById('updateOldTeamID').value);
+    const newIDValue = parseInt(document.getElementById('updateNewTeamID').value);
+
+    if (!oldNameValue || !oldIDValue) {
+        alert("Old Species Name and Old Research Team ID are required.");
+        return;
+    }
+
+    const response = await fetch('/update-name-animaltable', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            oldName: oldNameValue,
+            newName: newNameValue,
+            oldID: oldIDValue,
+            newID: newIDValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updateNameResultMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = "Name updated successfully!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Error updating table!";
+    }
+}
 // This function resets or initializes the demotable.
 async function resetDemotable() {
     const response = await fetch("/initiate-demotable", {
@@ -277,7 +314,7 @@ window.onload = function() {
     fetchTableData();
     document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
-    document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
+    document.getElementById("updateNameAnimaltable").addEventListener("submit", updateNameAnimaltable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
     document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
     document.getElementById("havingButton").addEventListener("click", havingFunctionality); 
