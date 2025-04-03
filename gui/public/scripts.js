@@ -184,9 +184,7 @@ async function insertDemotable(event) {
     const animalId = parseInt(document.getElementById('insertId').value);
     const habitatId = parseInt(document.getElementById('insertHabitat').value);
     const researchTeamId = parseInt(document.getElementById('insertTeam').value);
-
     const speciesName = document.getElementById('insertSpecies').value;
-
 
     const response = await fetch('/insert-demotable', {
         method: 'POST',
@@ -206,11 +204,14 @@ async function insertDemotable(event) {
 
     if (responseData.success) {
         messageElement.textContent = "Animal inserted successfully!";
+        messageElement.style.color = "green";
         fetchTableData();
     } else {
-        messageElement.textContent = "Error inserting animal!";
+        messageElement.textContent = responseData.errorMessage || "Error inserting animal!";
+        messageElement.style.color = "red";
     }
 }
+
 
 async function selectAnimalTable(event) {
     event.preventDefault();

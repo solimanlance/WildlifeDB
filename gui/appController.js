@@ -32,12 +32,18 @@ router.post("/initiate-demotable", async (req, res) => {
 router.post("/insert-demotable", async (req, res) => {
     const { animal_id, habitat_id, species_name, research_team_id } = req.body;
     const insertResult = await appService.insertDemotable(animal_id, habitat_id, species_name, research_team_id);
-    if (insertResult) {
+    
+    if (insertResult.success) {
         res.json({ success: true });
     } else {
-        res.status(500).json({ success: false });
+        res.status(500).json({ 
+            success: false, 
+            errorMessage: insertResult.errorMessage || "Error inserting animal!" 
+        });
     }
 });
+
+
 
 
 router.post("/delete-animal", async (req, res) => {

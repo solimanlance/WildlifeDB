@@ -178,16 +178,37 @@ initializeTable()
     async function insertDemotable(animal_id, habitat_id, species_name, research_team_id) {
         console.log("INSERTING:", { animal_id, habitat_id, species_name, research_team_id });
         return await withOracleDB(async (connection) => {
-            const result = await connection.execute(
-                `INSERT INTO ANIMAL (AnimalID, HabitatID, Species, ResearchTeamID)
-                 VALUES (:animal_id, :habitat_id, :species_name, :research_team_id)`,
-                [animal_id, habitat_id, species_name, research_team_id],
-                { autoCommit: true }
-            );
-    
-            return result.rowsAffected && result.rowsAffected > 0;
-        }).catch(() => {
-            return false;
+            try {
+                const result = await connection.execute(
+                    `INSERT INTO ANIMAL (AnimalID, HabitatID, Species, ResearchTeamID)
+                     VALUES (:animal_id, :habitat_id, :species_name, :research_team_id)`,
+                    [animal_id, habitat_id, species_name, research_team_id],
+                    { autoCommit: true }
+                );
+                
+                return { success: true, rowsAffected: result.rowsAffected };
+            } catch (error) {
+                // Oracle error codes for common errors
+                const errorCode = error.errorNum;
+                let errorMessage = "Database error occurred";
+                
+            
+                if (errorCode === 1) {
+                    errorMessage = "Duplicate Animal ID - this ID already exists";
+                } else if (errorCode === 2291) {
+                    errorMessage = "Foreign key constraint failed";
+                } else if (errorCode === 1400) {
+                    errorMessage = "Cannot insert NULL value";
+                } else if (errorCode === 12899) {
+                    errorMessage = "Value too large for column";
+                }
+                
+                console.error("Database error:", error);
+                return { success: false, errorMessage: errorMessage };
+            }
+        }).catch(error => {
+            console.error("Connection error:", error);
+            return { success: false, errorMessage: "Database connection error" };
         });
     }
     
