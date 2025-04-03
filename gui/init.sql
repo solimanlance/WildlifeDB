@@ -186,8 +186,13 @@ INSERT INTO ResearchTeams(ResearchTeamID, ContactInfo) VALUES (205, 'rli@yahoo.c
 INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES (1, 201, 1000.00);
 INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES (1, 202, 5000.25);
 INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES (2, 203, 2500.00);
+INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES (2, 201, 4000.00);
 INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES (3, 201, 1500.00);
 INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES (4, 204, 4000.00);
+INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES (4, 201, 230.00);
+INSERT INTO Funds (SponsorID, ResearchTeamID, Contributions) VALUES (5, 201, 150.00);
+
+
 
 -- Publications (ResearchTeamID, PublicationID, PublicationDate):
 INSERT INTO Publications (ResearchTeamID, PublicationID, PublicationDate) VALUES (201, 301, TO_DATE('2015-06-24', 'YYYY-MM-DD'));
