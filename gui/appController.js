@@ -5,7 +5,7 @@ const router = express.Router();
 
 // ----------------------------------------------------------
 // API endpoints
-// Modify or extend these routes based on your project's needs.
+// Modify or extend these routes based on your project's needs..
 router.get('/check-db-connection', async (req, res) => {
     const isConnect = await appService.testOracleConnection();
     if (isConnect) {
