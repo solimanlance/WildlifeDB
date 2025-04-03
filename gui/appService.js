@@ -212,11 +212,33 @@ async function countDemotable() {
     });
 }
 
+async function getGroupedPopulation() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT OrganizationID,MIN(PopulationCount) AS mixn_population 
+            FROM LivesIn 
+            GROUP BY OrganizationID
+        `);
+
+        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
+        console.log("DB Query Result:", result.rows);  // Add this to log the data
+
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
+
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
     updateNameAnimaltable, 
-    countDemotable
+    countDemotable,
+    getGroupedPopulation
+
 };

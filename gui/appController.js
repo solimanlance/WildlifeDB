@@ -64,5 +64,21 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+router.get('/group-by-query', async (req, res) => { 
+    try {
+        const groupData = await appService.getGroupedPopulation();
+
+        console.log("Grouped Data from appService:", groupData);
+
+        if (groupData.length > 0) {
+            res.json({ success: true, groupData });
+        } else {
+            res.json({ success: false, message: "No grouped population data found" });
+        }
+    } catch (error) {
+        console.error('Error in /group-by-query route:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 module.exports = router;
