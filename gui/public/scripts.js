@@ -5,7 +5,7 @@
  *      - After receiving responses from the backend.
  * 
  * To tailor them to your specific needs,
- * adjust or expand these functions to match both your 
+ * adjust or e.xpand these functions to match both your 
  *   backend endpoints 
  * and 
  *   HTML structure.
