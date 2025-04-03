@@ -49,6 +49,21 @@ router.post("/update-name-animaltable", async (req, res) => {
     }
 });
 
+router.post("/projection-query", async (req, res) => {
+    try {
+        const { selectedField } = req.body;
+        const projectionResult = await appService.projectionPlants(selectedField);
+
+        if (projectionResult) {
+            res.json({ success: true, data: projectionResult });
+        } else {
+            res.status(500).json({ success: false, message: "Projection failed" });
+        }
+    } catch (error) {
+        console.error("Error in projection-query:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
 router.get('/count-demotable', async (req, res) => {
     const tableCount = await appService.countDemotable();
     if (tableCount >= 0) {

@@ -179,6 +179,44 @@ async function countDemotable() {
     }
 }
 
+async function projectionFunctionality(event) {
+    event.preventDefault();
+
+    const selectedField = document.getElementById("selectedField").value.trim();
+    const projectionResultDiv = document.getElementById("projectionResult");
+
+    try {
+        const response = await fetch("/projection-query", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ selectedField }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok.`);
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);
+
+        if (data.success && data.data.length > 0) {
+            let tableHTML = `<table border="1"><thead><tr><th>${selectedField}</th></tr></thead><tbody>`;
+
+            data.data.forEach(row => {
+                tableHTML += `<tr><td>${row[0]}</td></tr>`; 
+            });
+
+            tableHTML += `</tbody></table>`;
+            projectionResultDiv.innerHTML = tableHTML;
+        } else {
+            projectionResultDiv.textContent = `Error: ${data.message || "No data found."}`;
+        }
+    } catch (error) {
+        console.error("Error fetching the data:", error);
+        projectionResultDiv.textContent = `Error fetching the data from the server: ${error.message}`;
+    }
+}
+
 async function groupByQueryFunctionality() {
     try {
         const response = await fetch('/group-by-query');
@@ -316,6 +354,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updateNameAnimaltable").addEventListener("submit", updateNameAnimaltable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    document.getElementById("projection").addEventListener("submit", projectionFunctionality);
     document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
     document.getElementById("havingButton").addEventListener("click", havingFunctionality); 
     document.getElementById("nestedButton").addEventListener("click", nestedFunctionality); 
