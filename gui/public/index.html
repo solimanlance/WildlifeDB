@@ -77,21 +77,23 @@
     <!-- A placeholder to display messages related to the update operation. -->
     <div id="updateNameResultMsg"></div>
 
+    <br><hr><br>
+
+        <h2>Delete Animal</h2>
+    <form id="deleteAnimalForm">
+        Animal ID: <input type="number" id="deleteAnimalId" placeholder="Enter Animal ID to delete" required> <br><br>
+        <button type="submit">Delete Animal</button>
+    </form>
+    <div id="deleteAnimalMsg"></div>
+
+
+
     <br><hr><br> <!-- ========================================================================= -->
 
     <h2>Count the Tuples in DemoTable</h2>
     <button id="countDemotable"> count </button> <br><br>
     <!-- A placeholder to display the count result. -->
     <div id="countResultMsg"></div> <br>
-
-    <br><hr><br> <!-- ========================================================================= -->
-
-
-    <h2> GROUP BY </h2>
-    <p> Display the minimum population of any species of animals living in each organization </p>
-    <button id="groupByButton"> Execute Query </button> <br><br>  
-
-    <div id="groupByResult"></div> <br> 
 
     <!-- ===================================================================================== -->
     <!-- External JavaScript file that contains the functionality/logic for the operations above. -->

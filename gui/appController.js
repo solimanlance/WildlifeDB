@@ -39,6 +39,17 @@ router.post("/insert-demotable", async (req, res) => {
 });
 
 
+router.post("/delete-animal", async (req, res) => {
+    const { animal_id } = req.body;
+    const deleteResult = await appService.deleteAnimal(animal_id);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+
 router.post("/update-name-demotable", async (req, res) => {
     const { oldName, newName } = req.body;
     const updateResult = await appService.updateNameDemotable(oldName, newName);
@@ -64,21 +75,5 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
-router.get('/group-by-query', async (req, res) => { 
-    try {
-        const groupData = await appService.getGroupedPopulation();
-
-        console.log("Grouped Data from appService:", groupData);
-
-        if (groupData.length > 0) {
-            res.json({ success: true, groupData });
-        } else {
-            res.json({ success: false, message: "No grouped population data found" });
-        }
-    } catch (error) {
-        console.error('Error in /group-by-query route:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
 
 module.exports = router;

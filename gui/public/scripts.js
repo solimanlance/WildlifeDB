@@ -62,6 +62,37 @@ async function fetchAndDisplayUsers() {
     });
 }
 
+
+async function deleteAnimal(event) {
+    event.preventDefault();  // This stops the form from submitting normally
+
+    const animalId = parseInt(document.getElementById('deleteAnimalId').value);
+    
+    console.log("Attempting to delete animal with ID:", animalId);  // Add this for debugging
+
+    const response = await fetch('/delete-animal', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ animal_id: animalId })
+    });
+
+    console.log("Fetch request sent to /delete-animal");
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('deleteAnimalMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = `Animal with ID ${animalId} deleted successfully.`;
+        fetchTableData(); // Refresh table data
+    } else {
+        messageElement.textContent = `Error deleting animal with ID ${animalId}.`;
+    }
+}
+
+
+
 // This function resets or initializes the demotable.
 async function resetDemotable() {
     const response = await fetch("/initiate-demotable", {
@@ -129,43 +160,7 @@ async function countDemotable() {
         const tupleCount = responseData.count;
         messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
     } else {
-        messageElement.textContent = "Error counting tuples!";
-    }
-}
-
-async function groupByQueryFunctionality() {
-    try {
-        const response = await fetch('/group-by-query');
-        
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        console.log("Data Received from Server:", data);  // Log the full response
-
-        const resultDiv = document.getElementById('groupByResult');
-
-        if (data.success) {
-            // Create a table element
-            let tableHTML = '<table border="1"><thead><tr><th>Organization ID</th><th>Minimum Population</th></tr></thead><tbody>';
-
-            // Loop through the data and create rows for each entry
-            data.groupData.forEach(row => {
-                const [organizationID, minPopulation] = row;
-                tableHTML += `<tr><td>${organizationID}</td><td>${minPopulation}</td></tr>`;
-            });
-
-            // Close the table tag
-            tableHTML += '</tbody></table>';
-
-            resultDiv.innerHTML = tableHTML;
-        } else {
-            resultDiv.textContent = 'Error: No data found or the query failed.';
-        }
-    } catch (error) {
-        console.error('Error fetching the data:', error);
-        document.getElementById('groupByResult').textContent = 'Error fetching the data from the server.';
+        alert("Error in count demotable!");
     }
 }
 
@@ -178,9 +173,8 @@ window.onload = function() {
     fetchTableData();
     document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
-    document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
-    document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
+    document.getElementById("deleteAnimalForm").addEventListener("submit", deleteAnimal);
 };
 
 // General function to refresh the displayed table data. 
