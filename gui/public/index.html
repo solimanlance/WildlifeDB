@@ -88,6 +88,24 @@
 
     <br><hr><br> <!-- ========================================================================= -->
 
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2> Select From Animal </h2>
+    <form id="selectAnimalTable">
+        Habitat ID: <input type="number" id="selectHabitat" placeholder="Enter Habitat ID" required> <br><br>
+        <select name="andor" id="andor">
+            <option value="and">And</option>
+            <option value="or">Or</option>
+          </select>
+          <br><br>
+        Species: <input type="text" id="selectSpecies" placeholder="Enter Species"> <br><br>
+        <button type="submit"> select </button> <br>
+    </form>
+    <div id="selectResultMsg"></div>
+
+
+    <br><hr><br> <!-- ========================================================================= -->
+
 
     <h2> Aggregation with GROUP BY </h2>
     <p> Display the minimum population of any species of animals living in each organization </p>

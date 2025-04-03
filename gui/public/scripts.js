@@ -103,7 +103,7 @@ async function resetDemotable() {
     }
 }
 
-// Updates names in the demotable.
+// inserts names in the demotable.
 async function insertDemotable(event) {
     event.preventDefault();
 
@@ -135,6 +135,91 @@ async function insertDemotable(event) {
         fetchTableData();
     } else {
         messageElement.textContent = "Error inserting animal!";
+    }
+}
+
+async function selectAnimalTable(event) {
+    event.preventDefault();
+    console.log("SELECT ANIMAL RUNNING");
+    const habitatId = parseInt(document.getElementById('selectHabitat').value);
+    console.log("Habitat ID:", habitatId);
+    const species = document.getElementById('selectSpecies').value;
+    console.log("Species:", species);
+    const andOr = document.getElementById('andor').value;
+    console.log("And/Or:", andOr);
+
+
+    try {
+        console.log("DOING TRY NOW");
+        const response = await fetch('/select-animal', {
+    
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                habitat_id: habitatId,
+                species: species,
+                and_or: andOr
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+
+        const responseData = await response.json();
+        console.log('Response Data:', responseData);
+
+        const messageElement = document.getElementById('selectResultMsg');
+
+        if (responseData.success && responseData.data.length > 0) {
+            console.log('SUCCESS');
+            console.log('Data received successfully, creating table...');
+            
+            let tableHTML = `
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Animal ID</th>
+                            <th>Species</th>
+                            <th>Habitat ID</th>
+                            <th>Research Team ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+    // Ensure the correct property names match the response
+    responseData.data.forEach(row => {
+        const animalId = row.ANIMALID || '';
+        const species = row.SPECIES || '';
+        const habitatId = row.HABITATID || '';
+        const researchTeamId = row.RESEARCHTEAMID || '';
+
+        console.log(`Parsed Data - Animal ID: ${animalId}, Species: ${species}, Habitat ID: ${habitatId}, Research Team ID: ${researchTeamId}`);
+
+        tableHTML += `
+            <tr>
+                <td>${animalId}</td>
+                <td>${species}</td>
+                <td>${habitatId}</td>
+                <td>${researchTeamId}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += '</tbody></table>';
+
+    messageElement.innerHTML = tableHTML;
+    } else {
+        messageElement.textContent = 'Error: No data found or the query failed.';
+    }
+
+    } catch (error) {
+        console.error('Error fetching the data: or the ', error);
+        document.getElementById('selectResultMsg').textContent = `Error: no data found or the query failed`;
     }
 }
 
@@ -315,12 +400,12 @@ window.onload = function() {
     document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updateNameAnimaltable").addEventListener("submit", updateNameAnimaltable);
+    document.getElementById('selectAnimalTable').addEventListener('submit', selectAnimalTable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
     document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
     document.getElementById("havingButton").addEventListener("click", havingFunctionality); 
     document.getElementById("nestedButton").addEventListener("click", nestedFunctionality); 
     document.getElementById("divisionButton").addEventListener("click", divisionFunctionality); 
-
 };
 
 // General function to refresh the displayed table data. 
