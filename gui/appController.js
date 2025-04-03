@@ -39,6 +39,28 @@ router.post("/insert-demotable", async (req, res) => {
     }
 });
 
+
+router.post("/delete-animal", async (req, res) => {
+    const { animal_id } = req.body;
+    const deleteResult = await appService.deleteAnimal(animal_id);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+
+router.post("/delete-animal", async (req, res) => {
+    const { animal_id } = req.body;
+    const deleteResult = await appService.deleteAnimal(animal_id);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
 router.post("/update-name-animaltable", async (req, res) => {
     const { oldName, newName, oldID, newID } = req.body;
     const updateResult = await appService.updateNameAnimaltable(oldName, newName, oldID, newID);
@@ -49,6 +71,21 @@ router.post("/update-name-animaltable", async (req, res) => {
     }
 });
 
+router.post("/projection-query", async (req, res) => {
+    try {
+        const { selectedField } = req.body;
+        const projectionResult = await appService.projectionPlants(selectedField);
+
+        if (projectionResult) {
+            res.json({ success: true, data: projectionResult });
+        } else {
+            res.status(500).json({ success: false, message: "Projection failed" });
+        }
+    } catch (error) {
+        console.error("Error in projection-query:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
 router.get('/count-demotable', async (req, res) => {
     const tableCount = await appService.countDemotable();
     if (tableCount >= 0) {
@@ -82,6 +119,8 @@ router.post("/select-animal", async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 });
+
+
 
 router.get('/group-by-query', async (req, res) => { 
     try {
