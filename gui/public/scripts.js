@@ -162,20 +162,20 @@ async function updateNameAnimaltable(event) {
         messageElement.textContent = "Error updating table!";
     }
 }
-// This function resets or initializes the demotable.
-async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
-        method: 'POST'
-    });
-    const responseData = await response.json();
-    if (responseData.success) {
-        const messageElement = document.getElementById('resetResultMsg');
-        messageElement.textContent = "demotable initiated successfully!";
-        fetchTableData();
-    } else {
-        alert("Error initiating table!");
-    }
-}
+// // This function resets or initializes the demotable.
+// async function resetDemotable() {
+//     const response = await fetch("/initiate-demotable", {
+//         method: 'POST'
+//     });
+//     const responseData = await response.json();
+//     if (responseData.success) {
+//         const messageElement = document.getElementById('resetResultMsg');
+//         messageElement.textContent = "demotable initiated successfully!";
+//         fetchTableData();
+//     } else {
+//         alert("Error initiating table!");
+//     }
+// }
 
 // inserts names in the demotable.
 async function insertDemotable(event) {
@@ -510,7 +510,7 @@ async function divisionFunctionality() {
 window.onload = function() {
     checkDbConnection();
     fetchTableData();
-    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
+    // document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updateNameAnimaltable").addEventListener("submit", updateNameAnimaltable);
     document.getElementById('selectAnimalTable').addEventListener('submit', selectAnimalTable);
