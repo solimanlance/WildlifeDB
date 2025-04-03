@@ -203,6 +203,32 @@ async function updateNameAnimaltable(oldName, newName, oldID, newID) {
     });
 }
 
+async function projectionPlants(selectedField) {
+
+
+    console.log("field to project", { selectedField });
+
+    const allowedFields = ["PlantID", "HabitatID", "Species"]; 
+
+    if (!allowedFields.includes(selectedField)) {
+        console.error("Invalid field selected");
+        return false;
+    }
+
+    const query = `SELECT ${selectedField} FROM Plants`; 
+
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(query, {}, { autoCommit: true });
+
+            return result.rows; 
+        } catch (error) {
+            console.error("Database error:", error);
+            return false;
+        }
+    });
+}
+
 async function countDemotable() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT COUNT(*) FROM ANIMAL');
@@ -298,6 +324,7 @@ module.exports = {
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
+    projectionPlants, 
     updateNameAnimaltable, 
     countDemotable, 
     getGroupedPopulation,
