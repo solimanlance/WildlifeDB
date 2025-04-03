@@ -221,6 +221,7 @@ INSERT INTO Animal(AnimalID, Species, ResearchTeamID, HabitatID) VALUES (1001, '
 INSERT INTO Animal(AnimalID, Species, ResearchTeamID, HabitatID) VALUES (1002, 'Black Bear', 203, 503);
 INSERT INTO Animal(AnimalID, Species, ResearchTeamID, HabitatID) VALUES (1003, 'Tuna Fish', 204, 504);
 INSERT INTO Animal(AnimalID, Species, ResearchTeamID, HabitatID) VALUES (1004, 'Giraffe', 205, 505);
+INSERT INTO Animal (AnimalID, HabitatID, Species, ResearchTeamID) VALUES (1005, 501, 'Penguin', 201);
 
 -- LivesIn(OrganizationID, AnimalID, PopulationCount):
 INSERT INTO LivesIn(OrganizationID, AnimalID, PopulationCount) VALUES (101, 1000, 3);
@@ -230,6 +231,8 @@ INSERT INTO LivesIn(OrganizationID, AnimalID, PopulationCount) VALUES (103, 1003
 INSERT INTO LivesIn(OrganizationID, AnimalID, PopulationCount) VALUES (103, 1004, 4);
 
 -- Caretaker (CaretakerID, Name, OrganizationID, Specialization, AnimalID):
+INSERT INTO Caretaker (CaretakerID, Name, OrganizationID, Specialization, AnimalID) VALUES (299, 'Alice', 101, 'Veterinary', 1005);
+INSERT INTO Caretaker (CaretakerID, Name, OrganizationID, Specialization, AnimalID) VALUES (289, 'Mak', 101, 'Food Specialist', 1005);
 INSERT INTO Caretaker (CaretakerID, Name, OrganizationID, Specialization, AnimalID) VALUES (300, 'Bob', 101, 'Monkeys', 1001);
 INSERT INTO Caretaker (CaretakerID, Name, OrganizationID, Specialization, AnimalID) VALUES (301, 'John', 101, 'Penguins', 1002);
 INSERT INTO Caretaker (CaretakerID, Name, OrganizationID, Specialization, AnimalID) VALUES (302, 'Raymond', 102, 'Frogs', 1003);
