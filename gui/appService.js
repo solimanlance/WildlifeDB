@@ -88,16 +88,20 @@ async function fetchDemotableFromDb() {
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
+            await connection.execute(`DROP TABLE ANIMAL`);
         } catch(err) {
             console.log('Table might not exist, proceeding to create...');
         }
 
         const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE (
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
-            )
+            CREATE TABLE Animal (
+                AnimalID int PRIMARY KEY,
+                HabitatID int NOT NULL,
+                Species VARCHAR(30),
+                ResearchTeamID int,
+                FOREIGN KEY (HabitatID) references NaturalHabitat,
+                FOREIGN KEY (ResearchTeamID) references ResearchTeams
+            );
         `);
         return true;
     }).catch(() => {
@@ -155,7 +159,6 @@ initializeTable()
 
     async function insertDemotable(animal_id, habitat_id, species_name, research_team_id) {
         console.log("INSERTING:", { animal_id, habitat_id, species_name, research_team_id });
-        
         return await withOracleDB(async (connection) => {
             const result = await connection.execute(
                 `INSERT INTO ANIMAL (AnimalID, HabitatID, Species, ResearchTeamID)
@@ -195,11 +198,55 @@ async function updateNameAnimaltable(oldName, newName, oldID, newID) {
             },
             { autoCommit: true }
         );
-
+        
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch(() => {
         console.log("FALSE");
         return false;
+    });
+}
+
+async function deleteAnimal(animal_id) {
+    console.log(animal_id);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `DELETE FROM ANIMAL WHERE AnimalID = :animal_id`,
+            [animal_id],
+            { autoCommit: true }
+        );
+      
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error("Delete Error:", err);
+        return false;
+    });
+}
+
+
+
+async function projectionPlants(selectedField) {
+
+
+    console.log("field to project", { selectedField });
+
+    const allowedFields = ["PlantID", "HabitatID", "Species"]; 
+
+    if (!allowedFields.includes(selectedField)) {
+        console.error("Invalid field selected");
+        return false;
+    }
+
+    const query = `SELECT ${selectedField} FROM Plants`; 
+
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(query, {}, { autoCommit: true });
+
+            return result.rows; 
+        } catch (error) {
+            console.error("Database error:", error);
+            return false;
+        }
     });
 }
 
@@ -332,11 +379,13 @@ module.exports = {
     fetchDemotableFromDb,
     initiateDemotable, 
     insertDemotable, 
+    projectionPlants, 
     updateNameAnimaltable, 
     selectAnimal,
     countDemotable, 
-    getGroupedPopulation,
+    deleteAnimal,
     havingOver2000, 
     highestAverageContribution,
-    sponsoredByAll
+    sponsoredByAll,
+    getGroupedPopulation
 };

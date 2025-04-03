@@ -51,6 +51,37 @@ async function fetchAndDisplayUsers() {
         });
     });
 }
+
+
+async function deleteAnimal(event) {
+    event.preventDefault();  // This stops the form from submitting normally
+
+    const animalId = parseInt(document.getElementById('deleteAnimalId').value);
+    
+    console.log("Attempting to delete animal with ID:", animalId);  // Add this for debugging
+
+    const response = await fetch('/delete-animal', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ animal_id: animalId })
+    });
+
+    console.log("Fetch request sent to /delete-animal");
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('deleteAnimalMsg');
+
+    if (responseData.success) {
+        messageElement.textContent = `Animal with ID ${animalId} deleted successfully.`;
+        fetchTableData(); // Refresh table data
+    } else {
+        messageElement.textContent = `Error deleting animal with ID ${animalId}.`;
+    }
+}
+
+
 // Updates names in the demotable.
 async function updateNameAnimaltable(event) {
     event.preventDefault();
@@ -264,6 +295,44 @@ async function countDemotable() {
     }
 }
 
+async function projectionFunctionality(event) {
+    event.preventDefault();
+
+    const selectedField = document.getElementById("selectedField").value.trim();
+    const projectionResultDiv = document.getElementById("projectionResult");
+
+    try {
+        const response = await fetch("/projection-query", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ selectedField }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok.`);
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);
+
+        if (data.success && data.data.length > 0) {
+            let tableHTML = `<table border="1"><thead><tr><th>${selectedField}</th></tr></thead><tbody>`;
+
+            data.data.forEach(row => {
+                tableHTML += `<tr><td>${row[0]}</td></tr>`; 
+            });
+
+            tableHTML += `</tbody></table>`;
+            projectionResultDiv.innerHTML = tableHTML;
+        } else {
+            projectionResultDiv.textContent = `Error: ${data.message || "No data found."}`;
+        }
+    } catch (error) {
+        console.error("Error fetching the data:", error);
+        projectionResultDiv.textContent = `Error fetching the data from the server: ${error.message}`;
+    }
+}
+
 async function groupByQueryFunctionality() {
     try {
         const response = await fetch('/group-by-query');
@@ -402,6 +471,8 @@ window.onload = function() {
     document.getElementById("updateNameAnimaltable").addEventListener("submit", updateNameAnimaltable);
     document.getElementById('selectAnimalTable').addEventListener('submit', selectAnimalTable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    document.getElementById("deleteAnimalForm").addEventListener("submit", deleteAnimal);
+    document.getElementById("projection").addEventListener("submit", projectionFunctionality);
     document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
     document.getElementById("havingButton").addEventListener("click", havingFunctionality); 
     document.getElementById("nestedButton").addEventListener("click", nestedFunctionality); 
