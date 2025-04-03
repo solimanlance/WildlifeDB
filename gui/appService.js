@@ -351,5 +351,6 @@ module.exports = {
     deleteAnimal,
     havingOver2000, 
     highestAverageContribution,
-    sponsoredByAll
+    sponsoredByAll,
+    getGroupedPopulation
 };

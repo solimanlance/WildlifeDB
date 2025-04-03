@@ -385,6 +385,7 @@ window.onload = function() {
     document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
     document.getElementById("updateNameAnimaltable").addEventListener("submit", updateNameAnimaltable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    document.getElementById("deleteAnimalForm").addEventListener("submit", deleteAnimal);
     document.getElementById("projection").addEventListener("submit", projectionFunctionality);
     document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
     document.getElementById("havingButton").addEventListener("click", havingFunctionality); 
