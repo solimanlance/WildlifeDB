@@ -212,6 +212,40 @@ async function countDemotable() {
     });
 }
 
+async function selectAnimal(habitat_id, species, and_or) {
+    console.log("SELECTING from database:", { habitat_id, species, and_or });
+
+    return await withOracleDB(async (connection) => {
+        let query = `SELECT * FROM ANIMAL WHERE HabitatID = :habitat_id`;
+        let params = { habitat_id };
+
+        if (species !== null) {
+            if (and_or === 'and') {
+                query += ' AND Species = :species';
+            } else if (and_or === 'or') {
+                query += ' OR Species = :species';
+            }
+            params.species = species;
+        }
+
+        console.log("Executing query:", query);
+        console.log("With parameters:", params);
+
+        try {
+            const result = await connection.execute(query, params, { outFormat: oracledb.OUT_FORMAT_OBJECT });
+            console.log("Database query result:", result.rows);
+            return result.rows;
+        } catch (dbError) {
+            console.error("Database query error:", dbError);
+            return false;
+        }
+    }).catch(dbError => {
+        console.error("Error with OracleDB connection:", dbError);
+        return false;
+    });
+}
+
+
 async function getGroupedPopulation() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
@@ -299,6 +333,7 @@ module.exports = {
     initiateDemotable, 
     insertDemotable, 
     updateNameAnimaltable, 
+    selectAnimal,
     countDemotable, 
     getGroupedPopulation,
     havingOver2000, 

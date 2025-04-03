@@ -64,6 +64,24 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+router.post("/select-animal", async (req, res) => {
+    const { habitat_id, species, and_or } = req.body;
+    console.log("Request received:", { habitat_id, species, and_or });
+
+    try {
+        const selectResult = await appService.selectAnimal(habitat_id, species, and_or);
+        
+        if (selectResult && selectResult.length > 0) {
+            res.json({ success: true, data: selectResult });
+        } else {
+            console.error("No data found for the query");
+            res.status(404).json({ success: false, message: "No data found" });
+        }
+    } catch (error) {
+        console.error("Error in select-animal route:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
 
 router.get('/group-by-query', async (req, res) => { 
     try {
