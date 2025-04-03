@@ -11,22 +11,17 @@
  *   HTML structure.
  * 
  */
-
-
 // This function checks the database connection and updates its status on the frontend.
 async function checkDbConnection() {
     const statusElem = document.getElementById('dbStatus');
     const loadingGifElem = document.getElementById('loadingGif');
-
     const response = await fetch('/check-db-connection', {
         method: "GET"
     });
-
     // Hide the loading GIF once the response is received.
     loadingGifElem.style.display = 'none';
     // Display the statusElem's text in the placeholder.
     statusElem.style.display = 'inline';
-
     response.text()
     .then((text) => {
         statusElem.textContent = text;
@@ -35,24 +30,19 @@ async function checkDbConnection() {
         statusElem.textContent = 'connection timed out';  // Adjust error handling if required.
     });
 }
-
 // Fetches data from the demotable and displays it.
 async function fetchAndDisplayUsers() {
     const tableElement = document.getElementById('demotable');
     const tableBody = tableElement.querySelector('tbody');
-
     const response = await fetch('/demotable', {
         method: 'GET'
     });
-
     const responseData = await response.json();
     const demotableContent = responseData.data;
-
     // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
-
     demotableContent.forEach(user => {
         const row = tableBody.insertRow();
         user.forEach((field, index) => {
@@ -61,7 +51,6 @@ async function fetchAndDisplayUsers() {
         });
     });
 }
-
 // Updates names in the demotable.
 async function updateNameAnimaltable(event) {
     event.preventDefault();
@@ -99,14 +88,12 @@ async function updateNameAnimaltable(event) {
         messageElement.textContent = "Error updating table!";
     }
 }
-
 // This function resets or initializes the demotable.
 async function resetDemotable() {
     const response = await fetch("/initiate-demotable", {
         method: 'POST'
     });
     const responseData = await response.json();
-
     if (responseData.success) {
         const messageElement = document.getElementById('resetResultMsg');
         messageElement.textContent = "demotable initiated successfully!";
@@ -115,7 +102,6 @@ async function resetDemotable() {
         alert("Error initiating table!");
     }
 }
-
 
 // Updates names in the demotable.
 async function insertDemotable(event) {
@@ -153,34 +139,56 @@ async function insertDemotable(event) {
 }
 
 
+// Updates names in the demotable.
+async function updateNameDemotable(event) {
+    event.preventDefault();
+    const oldNameValue = document.getElementById('updateOldName').value;
+    const newNameValue = document.getElementById('updateNewName').value;
+    const response = await fetch('/update-name-demotable', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            oldName: oldNameValue,
+            newName: newNameValue
+        })
+    });
+    const responseData = await response.json();
+    const messageElement = document.getElementById('updateNameResultMsg');
+    if (responseData.success) {
+        messageElement.textContent = "Name updated successfully!";
+        fetchTableData();
+    } else {
+        messageElement.textContent = "Error updating name!";
+    }
+}
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
 async function countDemotable() {
     const response = await fetch("/count-demotable", {
         method: 'GET'
     });
-
     const responseData = await response.json();
     const messageElement = document.getElementById('countResultMsg');
-
     if (responseData.success) {
         const tupleCount = responseData.count;
         messageElement.textContent = `The number of tuples in demotable: ${tupleCount}`;
     } else {
-        messageElement.textContent = "Error counting tuples!";
+        alert("Error in count demotable!");
     }
 }
 
 async function groupByQueryFunctionality() {
     try {
         const response = await fetch('/group-by-query');
-        
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
 
         const data = await response.json();
-        console.log("Data Received from Server:", data);  // Log the full response
+        // console.log("Data Received from Server:", data);  // Log the full response
 
         const resultDiv = document.getElementById('groupByResult');
 
@@ -207,6 +215,96 @@ async function groupByQueryFunctionality() {
     }
 }
 
+async function havingFunctionality() {
+    try {
+        const response = await fetch('/having-query');
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);
+
+        const resultDiv = document.getElementById('havingResult');
+
+        if (data.success && data.groupData.length > 0) {
+            let tableHTML = '<table border="1"><thead><tr><th>Sponsor ID</th></thead><tbody>';
+            data.groupData.forEach(row => {
+                const [SponsorID] = row;
+                tableHTML += `<tr><td>${SponsorID}</td></tr>`;
+            });
+            tableHTML += '</tbody></table>';
+            resultDiv.innerHTML = tableHTML;
+        } else {
+            resultDiv.textContent = `Error: ${data.message || "No data found."}`;
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+        document.getElementById('havingResult').textContent = `Error fetching the data from the server: ${error.message}`;
+    }
+}
+
+async function nestedFunctionality() {
+    try {
+        const response = await fetch('/nested-query');
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);
+
+        const resultDiv = document.getElementById('nestedResult');
+
+        if (data.success && data.groupData.length > 0) {
+            let tableHTML = '<table border="1"><thead><tr><th>Sponsor ID</th></thead><tbody>';
+            data.groupData.forEach(row => {
+                const [SponsorID] = row;
+                tableHTML += `<tr><td>${SponsorID}</td></tr>`;
+            });
+            tableHTML += '</tbody></table>';
+            resultDiv.innerHTML = tableHTML;
+        } else {
+            resultDiv.textContent = `Error: ${data.message || "No data found."}`;
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+        document.getElementById('nestedResult').textContent = `Error fetching the data from the server: ${error.message}`;
+    }
+}
+
+async function divisionFunctionality() {
+    try {
+        const response = await fetch('/division-query');
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Data Received from Server:", data);
+
+        const resultDiv = document.getElementById('divisionResult');
+
+        if (data.success && data.groupData.length > 0) {
+            let tableHTML = '<table border="1"><thead><tr><th>Research Team ID</th></thead><tbody>';
+            data.groupData.forEach(row => {
+                const [ResearchTeamID] = row;
+                tableHTML += `<tr><td>${ResearchTeamID}</td></tr>`;
+            });
+            tableHTML += '</tbody></table>';
+            resultDiv.innerHTML = tableHTML;
+        } else {
+            resultDiv.textContent = `Error: ${data.message || "No data found."}`;
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+        document.getElementById('divisionResult').textContent = `Error fetching the data from the server: ${error.message}`;
+    }
+}
+
 
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
@@ -219,6 +317,10 @@ window.onload = function() {
     document.getElementById("updateNameAnimaltable").addEventListener("submit", updateNameAnimaltable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
     document.getElementById("groupByButton").addEventListener("click", groupByQueryFunctionality); 
+    document.getElementById("havingButton").addEventListener("click", havingFunctionality); 
+    document.getElementById("nestedButton").addEventListener("click", nestedFunctionality); 
+    document.getElementById("divisionButton").addEventListener("click", divisionFunctionality); 
+
 };
 
 // General function to refresh the displayed table data. 

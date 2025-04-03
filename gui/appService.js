@@ -221,6 +221,45 @@ async function getGroupedPopulation() {
         `);
 
         const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
+        // console.log("DB Query Result:", result.rows);  // Add this to log the data
+
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function havingOver2000() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT SponsorID
+            FROM Funds 
+            GROUP BY SponsorID
+            HAVING SUM(Contributions) > 2000 
+        `);
+
+        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
+        console.log("DB Query Result:", result.rows);  // Add this to log the data
+
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function highestAverageContribution() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT SponsorID 
+            FROM Funds F
+            GROUP BY SponsorID 
+            HAVING AVG(Contributions) >= ALL (
+                SELECT AVG(F1.Contributions)  
+                FROM Funds F1 
+                GROUP BY F1.SponsorID)`
+        );
+
+        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
         console.log("DB Query Result:", result.rows);  // Add this to log the data
 
         return result.rows;
@@ -230,7 +269,29 @@ async function getGroupedPopulation() {
 }
 
 
+async function sponsoredByAll() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT R.ResearchTeamID 
+            FROM ResearchTeams R
+            WHERE NOT EXISTS 
+                (SELECT F.SponsorID
+                FROM Funds F 
+                WHERE NOT EXISTS  
+                    (SELECT F2.SponsorID
+                    FROM Funds F2
+                    WHERE F2.ResearchTeamID = R.ResearchTeamID
+                    AND F2.SponsorID = F.SponsorID))`
+        );
 
+        const rows = result.rows.map(row => row[0]);  // Extract first column (min_population)
+        console.log("DB Query Result:", result.rows);  // Add this to log the data
+
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
 
 module.exports = {
     testOracleConnection,
@@ -238,7 +299,9 @@ module.exports = {
     initiateDemotable, 
     insertDemotable, 
     updateNameAnimaltable, 
-    countDemotable,
-    getGroupedPopulation
-
+    countDemotable, 
+    getGroupedPopulation,
+    havingOver2000, 
+    highestAverageContribution,
+    sponsoredByAll
 };
